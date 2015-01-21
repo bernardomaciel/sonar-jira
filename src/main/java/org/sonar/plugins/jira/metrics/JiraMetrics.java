@@ -36,9 +36,49 @@ public final class JiraMetrics implements Metrics {
       .setQualitative(false)
       .setDomain(ISSUES_DOMAIN)
       .create();
-
+  
+  public static final String BLOCKER_ISSUES_KEY = "blocker_issues";
+  public static final Metric BLOCKER_ISSUES = new Metric.Builder(BLOCKER_ISSUES_KEY, "JIRA Blocker Issues", Metric.ValueType.INT)
+      .setDescription("Number of JIRA Issues with priority set to Blocker")
+      .setDirection(Metric.DIRECTION_NONE)
+      .setQualitative(false)
+      .setDomain(ISSUES_DOMAIN)
+      .create();
+  
+  public static final String CRITICAL_ISSUES_KEY = "critical_issues";
+  public static final Metric CRITICAL_ISSUES = new Metric.Builder(BLOCKER_ISSUES_KEY, "JIRA Critical Issues", Metric.ValueType.INT)
+      .setDescription("Number of JIRA Issues with priority set to Critical")
+      .setDirection(Metric.DIRECTION_NONE)
+      .setQualitative(false)
+      .setDomain(ISSUES_DOMAIN)
+      .create();
+  
+  public static final String MAJOR_ISSUES_KEY = "major_issues";
+  public static final Metric MAJOR_ISSUES = new Metric.Builder(MAJOR_ISSUES_KEY, "JIRA Major Issues", Metric.ValueType.INT)
+      .setDescription("Number of JIRA Issues with priority set to Major")
+      .setDirection(Metric.DIRECTION_NONE)
+      .setQualitative(false)
+      .setDomain(ISSUES_DOMAIN)
+      .create();
+  
+  public static final String MINOR_ISSUES_KEY = "minor_issues";
+  public static final Metric MINOR_ISSUES = new Metric.Builder(MINOR_ISSUES_KEY, "JIRA Minor Issues", Metric.ValueType.INT)
+      .setDescription("Number of JIRA Issues with priority set to Minor")
+      .setDirection(Metric.DIRECTION_NONE)
+      .setQualitative(false)
+      .setDomain(ISSUES_DOMAIN)
+      .create();
+  
+  public static final String TRIVIAL_ISSUES_KEY = "trivial_issues";
+  public static final Metric TRIVIAL_ISSUES = new Metric.Builder(TRIVIAL_ISSUES_KEY, "JIRA Trivial Issues", Metric.ValueType.INT)
+      .setDescription("Number of JIRA Issues with priority set to Trivial")
+      .setDirection(Metric.DIRECTION_NONE)
+      .setQualitative(false)
+      .setDomain(ISSUES_DOMAIN)
+      .create();
+  
   public List<Metric> getMetrics() {
-    return Arrays.asList(ISSUES);
+    return Arrays.asList(ISSUES, BLOCKER_ISSUES, CRITICAL_ISSUES, MAJOR_ISSUES, MINOR_ISSUES, TRIVIAL_ISSUES );
   }
 
 }

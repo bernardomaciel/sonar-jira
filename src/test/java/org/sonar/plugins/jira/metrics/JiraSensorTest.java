@@ -24,6 +24,7 @@ import com.atlassian.jira.rpc.soap.client.JiraSoapService;
 import com.atlassian.jira.rpc.soap.client.RemoteFilter;
 import com.atlassian.jira.rpc.soap.client.RemoteIssue;
 import com.atlassian.jira.rpc.soap.client.RemotePriority;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -117,10 +118,15 @@ public class JiraSensorTest {
     SensorContext context = mock(SensorContext.class);
     String url = "http://localhost/jira";
     String priorityDistribution = "Critical=1";
-
+    
     sensor.saveMeasures(context, url, 1, priorityDistribution);
 
     verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.ISSUES, 1.0, priorityDistribution)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.BLOCKER_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.CRITICAL_ISSUES, 1.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MAJOR_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MINOR_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.TRIVIAL_ISSUES, 0.0)));
     verifyNoMoreInteractions(context);
   }
 

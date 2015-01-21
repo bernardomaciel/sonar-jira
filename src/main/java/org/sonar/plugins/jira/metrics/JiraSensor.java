@@ -25,6 +25,7 @@ import com.atlassian.jira.rpc.soap.client.RemoteFilter;
 import com.atlassian.jira.rpc.soap.client.RemoteIssue;
 import com.atlassian.jira.rpc.soap.client.RemotePriority;
 import com.google.common.collect.Maps;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.PropertiesBuilder;
 import org.sonar.api.resources.Project;
+import org.sonar.api.utils.KeyValueFormat;
 import org.sonar.plugins.jira.JiraConstants;
 import org.sonar.plugins.jira.soap.JiraSoapSession;
 
@@ -177,6 +179,24 @@ public class JiraSensor implements Sensor {
     issuesMeasure.setUrl(issueUrl);
     issuesMeasure.setData(priorityDistribution);
     context.saveMeasure(issuesMeasure);
+    
+    // TODO: this is ugly
+    Map<String, Integer> issuesDistribution = KeyValueFormat.parseStringInt(priorityDistribution);
+    
+    Measure blockerIssuesMeasure = new Measure(JiraMetrics.BLOCKER_ISSUES, (double) (issuesDistribution.get("Blocker") == null ? 0 : issuesDistribution.get("Blocker")));
+    context.saveMeasure(blockerIssuesMeasure);
+    
+    Measure criticalIssuesMeasure = new Measure(JiraMetrics.CRITICAL_ISSUES, (double) (issuesDistribution.get("Critical") == null ? 0 : issuesDistribution.get("Critical")));
+    context.saveMeasure(criticalIssuesMeasure);
+    
+    Measure majorIssuesMeasure = new Measure(JiraMetrics.MAJOR_ISSUES, (double) (issuesDistribution.get("Major") == null ? 0 : issuesDistribution.get("Major")));
+    context.saveMeasure(majorIssuesMeasure);
+    
+    Measure minorIssuesMeasure = new Measure(JiraMetrics.MINOR_ISSUES, (double) (issuesDistribution.get("Minor") == null ? 0 : issuesDistribution.get("Minor")));
+    context.saveMeasure(minorIssuesMeasure);
+    
+    Measure trivialIssuesMeasure = new Measure(JiraMetrics.TRIVIAL_ISSUES, (double) (issuesDistribution.get("Trivial") == null ? 0 : issuesDistribution.get("Trivial")));
+    context.saveMeasure(trivialIssuesMeasure);
   }
 
   @Override

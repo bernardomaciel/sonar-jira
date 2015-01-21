@@ -31,7 +31,7 @@ public class JiraMetricsTest {
   @Test
   public void testGetMetrics() throws Exception {
     List<Metric> metrics = new JiraMetrics().getMetrics();
-    assertThat(metrics.size()).isEqualTo(1);
+    assertThat(metrics.size()).isEqualTo(6);
     for (Metric metric : metrics) {
       assertThat(metric.getDomain()).isEqualTo(JiraMetrics.ISSUES_DOMAIN);
     }
