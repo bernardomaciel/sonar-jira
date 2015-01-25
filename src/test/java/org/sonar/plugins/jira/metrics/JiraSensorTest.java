@@ -175,7 +175,8 @@ public class JiraSensorTest {
     assertThat(foundFilter).isEqualTo(myFilter);
   }
 
-  @Test
+@SuppressWarnings("unchecked")
+@Test
   public void shouldFindFiltersWithPreviousJiraVersions() throws Exception {
     JiraSoapService jiraSoapService = mock(JiraSoapService.class);
     RemoteFilter myFilter = new RemoteFilter();
