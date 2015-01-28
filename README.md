@@ -1,6 +1,4 @@
-# sonar-jira
-SonarQube JIRA Plugin
-(with metrics by priority)
+# SonarQube JIRA Plugin (with metrics by priority)
 ================
 
 Simple extension of the SonarQube JIRA plugin.
