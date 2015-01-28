@@ -180,7 +180,7 @@ public class JiraSensor implements Sensor {
     issuesMeasure.setData(priorityDistribution);
     context.saveMeasure(issuesMeasure);
     
-    // TODO: this is ugly
+    // FIXME: this is ugly
     Map<String, Integer> issuesDistribution = KeyValueFormat.parseStringInt(priorityDistribution);
     
     Measure blockerIssuesMeasure = new Measure(JiraMetrics.BLOCKER_ISSUES, valueToDoubleOrZero(issuesDistribution, "Blocker"));
