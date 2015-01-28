@@ -46,7 +46,7 @@ public final class JiraMetrics implements Metrics {
       .create();
   
   public static final String CRITICAL_ISSUES_KEY = "critical_issues";
-  public static final Metric CRITICAL_ISSUES = new Metric.Builder(BLOCKER_ISSUES_KEY, "JIRA Critical Issues", Metric.ValueType.INT)
+  public static final Metric CRITICAL_ISSUES = new Metric.Builder(CRITICAL_ISSUES_KEY, "JIRA Critical Issues", Metric.ValueType.INT)
       .setDescription("Number of JIRA Issues with priority set to Critical")
       .setDirection(Metric.DIRECTION_NONE)
       .setQualitative(false)

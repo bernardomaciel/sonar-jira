@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
+import org.sonar.api.measures.PropertiesBuilder;
 import org.sonar.api.resources.Project;
 import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.jira.JiraConstants;
@@ -46,7 +47,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class JiraSensorTest {
-
+	
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
@@ -127,6 +128,79 @@ public class JiraSensorTest {
     verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MAJOR_ISSUES, 0.0)));
     verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MINOR_ISSUES, 0.0)));
     verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.TRIVIAL_ISSUES, 0.0)));
+    verifyNoMoreInteractions(context);
+  }
+  
+  @Test
+  public void testSaveMeasuresEmpty() {
+    SensorContext context = mock(SensorContext.class);
+    String url = "http://localhost/jira";
+    String priorityDistribution = "";
+    
+    
+	PropertiesBuilder<String, Integer> distribution = new PropertiesBuilder<String, Integer>();
+    @SuppressWarnings("unused")
+	String distributionAsString = distribution.buildData();
+    
+    sensor.saveMeasures(context, url, 0, priorityDistribution);
+
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.ISSUES, 0.0, priorityDistribution)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.BLOCKER_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.CRITICAL_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MAJOR_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MINOR_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.TRIVIAL_ISSUES, 0.0)));
+    verifyNoMoreInteractions(context);
+  }
+  
+  @Test
+  public void testSaveMeasuresMultiple() {
+    SensorContext context = mock(SensorContext.class);
+    String url = "http://localhost/jira";
+    String priorityDistribution = "Critical=1;Minor=10;Trivial=100;";
+    
+    sensor.saveMeasures(context, url, 1 + 10 + 100, priorityDistribution);
+
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.ISSUES, 1.0 + 10.0 + 100.0, priorityDistribution)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.BLOCKER_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.CRITICAL_ISSUES, 1.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MAJOR_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MINOR_ISSUES, 10.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.TRIVIAL_ISSUES, 100.0)));
+    verifyNoMoreInteractions(context);
+  }
+  
+  @Test
+  public void testSaveMeasuresMultipleMixed() {
+    SensorContext context = mock(SensorContext.class);
+    String url = "http://localhost/jira";
+    String priorityDistribution = "Trivial=1;Minor=10;Blocker=100;";
+    
+    sensor.saveMeasures(context, url, 1 + 10 + 100, priorityDistribution);
+
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.ISSUES, 1.0 + 10.0 + 100.0, priorityDistribution)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.BLOCKER_ISSUES, 100.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.CRITICAL_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MAJOR_ISSUES, 0.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MINOR_ISSUES, 10.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.TRIVIAL_ISSUES, 1.0)));
+    verifyNoMoreInteractions(context);
+  }
+  
+  @Test
+  public void testSaveMeasuresAll() {
+    SensorContext context = mock(SensorContext.class);
+    String url = "http://localhost/jira";
+    String priorityDistribution = "Blocker=1;Critical=10;Major=100;Minor=1000;Trivial=10000";
+    
+    sensor.saveMeasures(context, url, 1 + 10 + 100 + 1000 + 10000, priorityDistribution);
+
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.ISSUES, 1.0 + 10.0 + 100.0 + 1000.0 + 10000.0, priorityDistribution)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.BLOCKER_ISSUES, 1.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.CRITICAL_ISSUES, 10.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MAJOR_ISSUES, 100.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.MINOR_ISSUES, 1000.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(JiraMetrics.TRIVIAL_ISSUES, 10000.0)));
     verifyNoMoreInteractions(context);
   }
 

@@ -183,24 +183,29 @@ public class JiraSensor implements Sensor {
     // TODO: this is ugly
     Map<String, Integer> issuesDistribution = KeyValueFormat.parseStringInt(priorityDistribution);
     
-    Measure blockerIssuesMeasure = new Measure(JiraMetrics.BLOCKER_ISSUES, (double) (issuesDistribution.get("Blocker") == null ? 0 : issuesDistribution.get("Blocker")));
+    Measure blockerIssuesMeasure = new Measure(JiraMetrics.BLOCKER_ISSUES, valueToDoubleOrZero(issuesDistribution, "Blocker"));
     context.saveMeasure(blockerIssuesMeasure);
     
-    Measure criticalIssuesMeasure = new Measure(JiraMetrics.CRITICAL_ISSUES, (double) (issuesDistribution.get("Critical") == null ? 0 : issuesDistribution.get("Critical")));
+    Measure criticalIssuesMeasure = new Measure(JiraMetrics.CRITICAL_ISSUES, valueToDoubleOrZero(issuesDistribution, "Critical"));
     context.saveMeasure(criticalIssuesMeasure);
     
-    Measure majorIssuesMeasure = new Measure(JiraMetrics.MAJOR_ISSUES, (double) (issuesDistribution.get("Major") == null ? 0 : issuesDistribution.get("Major")));
+    Measure majorIssuesMeasure = new Measure(JiraMetrics.MAJOR_ISSUES, valueToDoubleOrZero(issuesDistribution, "Major"));
     context.saveMeasure(majorIssuesMeasure);
     
-    Measure minorIssuesMeasure = new Measure(JiraMetrics.MINOR_ISSUES, (double) (issuesDistribution.get("Minor") == null ? 0 : issuesDistribution.get("Minor")));
+    Measure minorIssuesMeasure = new Measure(JiraMetrics.MINOR_ISSUES, valueToDoubleOrZero(issuesDistribution, "Minor"));
     context.saveMeasure(minorIssuesMeasure);
     
-    Measure trivialIssuesMeasure = new Measure(JiraMetrics.TRIVIAL_ISSUES, (double) (issuesDistribution.get("Trivial") == null ? 0 : issuesDistribution.get("Trivial")));
+    Measure trivialIssuesMeasure = new Measure(JiraMetrics.TRIVIAL_ISSUES, valueToDoubleOrZero(issuesDistribution, "Trivial"));
     context.saveMeasure(trivialIssuesMeasure);
   }
 
   @Override
   public String toString() {
     return "JIRA issues sensor";
+  }
+  
+  private Double valueToDoubleOrZero(Map<String, Integer> map, String key) {
+	    Integer value = map.get(key);
+	    return value == null ? 0.0 : value.doubleValue();
   }
 }
