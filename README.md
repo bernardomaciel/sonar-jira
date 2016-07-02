@@ -16,4 +16,4 @@ in addition to the total number of JIRA issues.
 Note that this extension is still JIRA filter and SOAP service based.
 
 Original plugin homepage:
-http://docs.codehaus.org/display/SONAR/JIRA+Plugin
+http://docs.sonarqube.org/display/PLUG/JIRA+Plugin
